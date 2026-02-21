@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import sys
 import argparse
 import mutagen
@@ -5,13 +7,21 @@ import mutagen
 def show_audio_info(file_path):
     try:
         audio = mutagen.File(file_path)
-        print(f"File: {file_path}")
-        print(f"Format: {audio.mime}")
-        print(f"Size: {audio.info.length} seconds")
-        print(f"Bitrate: {audio.info.bitrate} kbps")
-        print(f"Channels: {audio.info.channels}")
-        print(f"Sample Rate: {audio.info.sample_rate} Hz")
-        print(f"Tags: {audio.tags}")
+        print("File: " + audio.filename)
+        print("Duration: " + str(audio.info.length) + " seconds")
+        print("Bitrate: " + str(audio.info.bitrate) + " kbps")
+        print("Channels: " + str(audio.info.channels))
+        print("Sample Rate: " + str(audio.info.sample_rate) + " Hz")
+        title = None
+        if audio.tags:
+            title = audio.tags.get("TIT2") or audio.tags.get("\xa9nam")
+            if title:
+                # For ID3 (MP3), title is a TextFrame object
+                try:
+                    title = title.text[0]
+                except AttributeError:
+                    pass
+        print("Title: " + str(title) if title else "Title: Unknown")
     except Exception as e:
         print(f"Error: {e}")
 
