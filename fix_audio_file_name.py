@@ -32,8 +32,10 @@ def show_audio_info(file_path):
 def main():
     parser = argparse.ArgumentParser(description="Show audio information")
     parser.add_argument("file", help="Path to the audio file")
+    parser.add_argument("--song-info", help="Showing song information in output.", action="store_true")
     args = parser.parse_args()
-    show_audio_info(args.file)
+    if args.song_info:
+        show_audio_info(args.file)
 
 if __name__ == "__main__":
     main()
