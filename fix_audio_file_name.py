@@ -27,15 +27,25 @@ def print_help():
     help_text = """
 Usage: fix_audio_file_name.py [OPTIONS] FILE
 
-Show audio information for the specified audio file.
+Show audio information or fix the audio file name based on tags.
 
 Positional arguments:
-  FILE                  Path to the audio file
+  FILE                    Path to the audio file.
 
 Optional arguments:
-  --song-info           Showing song information in output.
-  -h, --help            Show this help message and exit.
-"""
+  --song-info, -i         Show song information in the output.
+  --recursive, -r         Process all items under a directory recursively.
+  --output-dir DIR, -o DIR
+                          Output directory when used with --recursive.
+  --copy, -c              Copy files instead of renaming them.
+  -h, --help              Show this help message and exit.
+
+Examples:
+  fix_audio_file_name.py song.mp3
+  fix_audio_file_name.py --song-info song.mp3
+  fix_audio_file_name.py --recursive --output-dir output_dir --copy input_dir/
+    """
+
     print(help_text)
 
 
