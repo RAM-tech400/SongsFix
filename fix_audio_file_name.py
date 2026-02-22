@@ -46,7 +46,7 @@ def show_audio_info(file_path):
     except Exception as e:
         print(f"Error: {e}")
 
-def fix_audio_file_name(file_path, override_orginal_file=False):
+def fix_audio_file_name(file_path, override_orginal_file=False, output_dir=None):
     working_dir = os.path.dirname(file_path)
     original_file_name = file_path.split(os.sep)[-1]
     try:
@@ -55,11 +55,13 @@ def fix_audio_file_name(file_path, override_orginal_file=False):
         if song_title:
             new_file_name = song_title + "." + audio.filename.split(".")[-1]
             if not override_orginal_file:
-                print("Creating a new file with fixed name into \"NameFixedSongs\" directory...")
-                if not os.path.exists(working_dir + "/NameFixedSongs"):
+                if output_dir == None:
+                    output_dir = working_dir + "/NameFixedSongs"
+                print(f"Creating a new file with fixed name into \"{output_dir}\" directory...")
+                if not os.path.exists(output_dir):
                     print("Directory is not exists! Creating directory...")
-                    os.makedirs(working_dir + "/NameFixedSongs")
-                new_file_path = working_dir + "/NameFixedSongs/" + new_file_name
+                    os.makedirs(output_dir)
+                new_file_path = output_dir + os.sep + new_file_name
                 print("Coping from: " + file_path + " to " + new_file_path)
                 shutil.copy(file_path, new_file_path)
             else:
@@ -68,13 +70,15 @@ def fix_audio_file_name(file_path, override_orginal_file=False):
     except Exception as e:
         print(f"Error: {e}")
 
-def fix_audio_file_name_recursive(file_path, override_orginal_file=False):
+def fix_audio_file_name_recursive(file_path, override_orginal_file=False, origin=None):
+    if origin == None:
+        origin = file_path
     for file in os.listdir(file_path):
         path = file_path + os.sep + file
         if os.path.isdir(path):
-            fix_audio_file_name_recursive(path, override_orginal_file)
+            fix_audio_file_name_recursive(path, override_orginal_file, origin=origin)
         else:
-            fix_audio_file_name(path, override_orginal_file)
+            fix_audio_file_name(path, override_orginal_file, output_dir=origin+"/NameFixedSongs")
 
 def main():
     parser = argparse.ArgumentParser(description="Show audio information")
