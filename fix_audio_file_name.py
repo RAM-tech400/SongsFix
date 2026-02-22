@@ -77,7 +77,10 @@ def fix_audio_file_name(file_path, override=False, output_dir=None):
     original_file_name = file_path.split(os.sep)[-1]
     try:
         audio = mutagen.File(file_path)
-        song_title = get_song_title(audio)
+        song_title = str(get_song_title(audio)).replace(" ", "")
+        if original_file_name == song_title:
+            print(original_file_name + " is the correct name. Do not need to change it.")
+            return
         if song_title:
             new_file_name = song_title + "." + audio.filename.split(".")[-1]
             if not override:
