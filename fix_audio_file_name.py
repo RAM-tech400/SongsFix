@@ -3,6 +3,8 @@
 import sys
 import argparse
 import mutagen
+import os
+import shutil
 
 song_title = "Unknow"
 
@@ -45,6 +47,28 @@ def show_audio_info(file_path):
     except Exception as e:
         print(f"Error: {e}")
 
+def fix_audio_file_name(file_path, override_orginal_file=False):
+    working_dir = os.path.dirname(file_path)
+    original_file_name = file_path.split(os.sep)[-1]
+    try:
+        audio = mutagen.File(file_path)
+        song_title = get_song_title(audio)
+        if song_title:
+            new_file_name = song_title + "." + audio.filename.split(".")[-1]
+            if not override_orginal_file:
+                print("Creating a new file with fixed name into \"NameFixedSongs\" directory...")
+                if not os.path.exists(working_dir + "/NameFixedSongs"):
+                    print("Directory is not exists! Creating directory...")
+                    os.makedirs(working_dir + "/NameFixedSongs")
+                new_file_path = working_dir + "/NameFixedSongs/" + new_file_name
+                print("Coping from: " + file_path + " to " + new_file_path)
+                shutil.copy(file_path, new_file_path)
+            else:
+                print("Renaming file to fixed name at: " + file_path)
+                os.rename(file_path, new_file_name)
+    except Exception as e:
+        print(f"Error: {e}")
+
 def main():
     parser = argparse.ArgumentParser(description="Show audio information")
     parser.add_argument("file", help="Path to the audio file")
@@ -52,8 +76,7 @@ def main():
     args = parser.parse_args()
     if args.song_info:
         show_audio_info(args.file)
-    else:
-        print_help()
+    fix_audio_file_name(args.file)
 
 if __name__ == "__main__":
     main()
