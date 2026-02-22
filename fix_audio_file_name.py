@@ -1,4 +1,18 @@
 #!/usr/bin/env python3
+"""
+A command-line utility for displaying audio file metadata and correcting audio file names based on their embedded tags.
+Supports single files as well as recursive batch processing of directories. Provides options to copy or rename files,
+specifying output directories, and displaying detailed song information.
+
+Dependencies:
+    - mutagen (for metadata extraction)
+    - argparse (for argument parsing)
+    - os, shutil (for file and directory operations)
+
+Example usage:
+    python fix_audio_file_name.py --song-info song.mp3
+    python fix_audio_file_name.py --recursive --output-dir output_dir --copy input_dir/
+"""
 
 import argparse
 import mutagen
