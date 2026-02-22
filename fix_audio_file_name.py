@@ -7,6 +7,22 @@ import shutil
 
 song_title = "Unknow"
 
+def init_args():
+    parser = argparse.ArgumentParser(description="Show audio information")
+
+    parser.add_argument("file", help="Path to the audio file")
+    parser.add_argument("--song-info", help="Showing song information in output.", action="store_true")
+    parser.add_argument("--recursive", help="It is needed if you want to working with all items under a directory.", action="store_true")
+    parser.add_argument("--output-dir", help="Used with --recursive option to setting output directory. It ignores files tree or hierarchy.")
+    parser.add_argument("--copy", help="Copying files instead of renaming those. If used take more storage space.", action="store_true")
+    
+    parser.add_argument("-i", help="Short format for --song-info.", action="store_true")
+    parser.add_argument("-r", help="Short format for --recursive.", action="store_true")
+    parser.add_argument("-o", help="Short format for --output-dir.")
+    parser.add_argument("-c", help="Short format for --copy.", action="store_true")
+
+    return parser.parse_args()
+
 def print_help():
     help_text = """
 Usage: fix_audio_file_name.py [OPTIONS] FILE
@@ -84,13 +100,7 @@ def fix_audio_file_name_recursive(file_path, override=False, origin=None):
                 fix_audio_file_name(path, override)
 
 def main():
-    parser = argparse.ArgumentParser(description="Show audio information")
-    parser.add_argument("file", help="Path to the audio file")
-    parser.add_argument("--song-info", help="Showing song information in output.", action="store_true")
-    parser.add_argument("--recursive", help="It is needed if you want to working with all items under a directory.", action="store_true")
-    parser.add_argument("--output-dir", help="Used with --recursive option to setting output directory. It ignores files tree or hierarchy.")
-    parser.add_argument("--copy", help="Copying files instead of renaming those. If used take more storage space.", action="store_true")
-    args = parser.parse_args()
+    args = init_args()
     if args.song_info:
         show_audio_info(args.file)
     if os.path.isdir(args.file):
